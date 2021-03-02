@@ -1,9 +1,10 @@
 version: '3'
 services:
-  lamp:
-    build:
-      context: .
-    container_name: "lamp"
+  web:
+    image: tamatan/apache-php-centos7
+#    build:
+#      context: .
+    container_name: "web"
     ports:
       - "80:80"
     volumes:
