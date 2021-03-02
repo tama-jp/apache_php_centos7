@@ -78,7 +78,6 @@ WORKDIR /usr/src/FD-3.01j
 COPY --from=builder /usr/src/FD-3.01j .
 RUN make install
 
-
 # remiリポジトリの公開鍵を取り込む
 RUN rpm --import https://rpms.remirepo.net/RPM-GPG-KEY-remi
 
@@ -95,30 +94,28 @@ WORKDIR /tmp
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
 
-
 RUN mv /usr/sbin/suexec /usr/sbin/suexec_
 WORKDIR /var/www/html
 
-# Supervisord の設定ファイルを Docker イメージ内に転送する
-ADD ./conf/supervisord.conf /etc/supervisord.d/supervisord.ini
-
-# Supervisord の設定ファイルを Docker イメージ内に転送する
-ADD ./conf/supervisord.conf /etc/supervisord.d/supervisord.ini
-
 COPY src/index.php /var/www/html/
 
-RUN yum -y install --enablerepo=remi,epel,remi-php74 php-devel
-RUN yum -y install --enablerepo=remi,epel,remi-php74 php-pear
+RUN yum -y install --enablerepo=remi,epel,remi-php74 php-devel php-pear
 RUN pecl install -a xdebug
 
-RUN echo [zend debugger] >> /etc/php.ini
-RUN echo zend_extension=/usr/lib64/php/modules/xdebug.so >> /etc/php.ini
-RUN echo xdebug.defaul_enable=1 >> /etc/php.ini
-RUN echo xdebug.remote_enable=1 >> /etc/php.ini
-RUN echo xdebug.remote_port=9000 >> /etc/php.ini
-RUN echo xdebug.remote_handler=dbgp >> /etc/php.ini
-RUN echo xdebug.remote_autostart=1 >> /etc/php.ini
-RUN echo xdebug.remote_connect_back=1 >> /etc/php.ini
+RUN echo [zend debugger] >> /etc/php.ini && \
+    RUN echo zend_extension=/usr/lib64/php/modules/xdebug.so >> /etc/php.ini && \
+    RUN echo xdebug.defaul_enable=1 >> /etc/php.ini && \
+    RUN echo xdebug.remote_enable=1 >> /etc/php.ini && \
+    RUN echo xdebug.remote_port=9000 >> /etc/php.ini && \
+    RUN echo xdebug.remote_handler=dbgp >> /etc/php.ini && \
+    RUN echo xdebug.remote_autostart=1 >> /etc/php.ini && \
+    RUN echo xdebug.remote_connect_back=1 >> /etc/php.ini
+
+# Supervisord の設定ファイルを Docker イメージ内に転送する
+ADD ./conf/supervisord.conf /etc/supervisord.d/supervisord.ini
+
+# Supervisord の設定ファイルを Docker イメージ内に転送する
+ADD ./conf/supervisord.conf /etc/supervisord.d/supervisord.ini
 
 # sshd の使うポートを公開する
 EXPOSE 22 80
