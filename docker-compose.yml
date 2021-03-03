@@ -1,14 +1,23 @@
 version: '3'
 services:
+#  apache-php-centos7:
+#    image: tamatan/apache-php-centos7
+##    build:
+##      context: .
+#    container_name: "apache-php-centos7"
+#    ports:
+#      - "80:80"
+#    volumes:
+#      - "./html:/var/www/html"
   web:
-    image: tamatan/apache-php-centos7
-#    build:
-#      context: .
+    build:
+      context: .
     container_name: "web"
     ports:
       - "80:80"
     volumes:
       - "./html:/var/www/html"
+
 
   portainer:
     image: portainer/portainer-ce

@@ -94,6 +94,14 @@ RUN echo [zend debugger] >> /etc/php.ini && \
     echo xdebug.remote_autostart=1 >> /etc/php.ini && \
     echo xdebug.remote_connect_back=1 >> /etc/php.ini
 
+# ■ ログローテーション インストール
+RUN  yum install -y logrotate
+COPY ./conf/logrotate.conf /etc/logrotate.conf
+
+# ■ Cornインストール
+RUN  yum -y install cronie-noanacron
+COPY ./conf/crontab /etc/crontab
+
 RUN mv /usr/sbin/suexec /usr/sbin/suexec_
 
 WORKDIR /var/www/html
